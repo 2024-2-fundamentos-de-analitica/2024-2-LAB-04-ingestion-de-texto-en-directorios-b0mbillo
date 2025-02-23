@@ -71,3 +71,27 @@ def pregunta_01():
 
 
     """
+
+    import os
+    import pandas as pd
+
+    train_datos = []
+    test_datos = []
+    sentimientos = ["negative", "neutral", "positive"]
+
+    for sentimiento in sentimientos:
+        for file in os.listdir(f"./files/input/train/{sentimiento}"):
+            with open(f"./files/input/train/{sentimiento}/{file}", "r") as f:
+                train_datos.append({"phrase": f.read(), "target": sentimiento})
+
+    for sentimiento in sentimientos:
+        for file in os.listdir(f"./files/input/test/{sentimiento}"):
+            with open(f"./files/input/test/{sentimiento}/{file}", "r") as f:
+                test_datos.append({"phrase": f.read(), "target": sentimiento})
+
+    train_df = pd.DataFrame(train_datos)
+    test_df = pd.DataFrame(test_datos)
+
+    os.makedirs("./files/output", exist_ok=True)
+    train_df.to_csv("./files/output/train_dataset.csv", index=False)
+    test_df.to_csv("./files/output/test_dataset.csv", index=False)
